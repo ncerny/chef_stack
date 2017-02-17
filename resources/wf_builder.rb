@@ -112,6 +112,7 @@ action :create do
     file "#{workspace}/#{dir}" do
       content ensurekv(::File.read('/etc/chef/client.rb'),
                        node_name: new_resource.chef_user,
+                       log_location: 'STDOUT',
                        client_key: "#{workspace}/.chef/#{new_resource.chef_user}.pem",
                        trusted_certs_dir: '/etc/chef/trusted_certs'
                       )
