@@ -31,6 +31,7 @@ property :chef_user, String, default: 'workflow'
 property :chef_user_pem, String, required: true
 property :validation_pem, String, required: true
 property :builder_pem, String, required: true
+property :package_source, String
 
 load_current_value do
   # node.run_state['chef-users'] ||= Mixlib::ShellOut.new('chef-server-ctl user-list').run_command.stdout
@@ -55,6 +56,7 @@ action :create do
     version new_resource.version
     config new_resource.config
     accept_license new_resource.accept_license
+    package_source new_resource.package_source if property_is_set?(:package_source)
   end
 
   directory '/etc/delivery'
@@ -107,6 +109,7 @@ action :create do
       execute "create enterprise #{ent}" do
         command "delivery-ctl create-enterprise #{ent} --ssh-pub-key-file=/etc/delivery/builder_key.pub > /etc/delivery/#{ent}.creds"
         not_if "delivery-ctl list-enterprises --ssh-pub-key-file=/etc/delivery/builder_key.pub | grep -w #{ent}"
+        only_if 'delivery-ctl status'
       end
     end
   end
