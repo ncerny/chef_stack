@@ -17,7 +17,7 @@
 # limitations under the License.
 # rubocop:disable LineLength
 
-resource_name 'chef_org'
+resource_name 'chef_server_org'
 default_action :create
 
 property :org, String, name_property: true
