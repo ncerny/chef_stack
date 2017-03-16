@@ -26,7 +26,7 @@ property :version, [String, Symbol], default: :latest
 property :config, Hash, default: {}
 property :chef_server_url, String, default: Chef::Config['chef_server_url']
 property :chef_oauth2_app_id, String, required: true
-property :chef_oauth2_secret, String, required: true
+property :chef_oauth2_secret, String, required: true, sensitive: true
 property :chef_oauth2_verify_ssl, [TrueClass, FalseClass], default: true
 property :accept_license, [TrueClass, FalseClass], default: false
 property :platform, String

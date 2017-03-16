@@ -26,14 +26,14 @@ property :version, [String, Symbol], default: :latest
 property :pj_version, [String, Symbol], default: :latest
 property :accept_license, [TrueClass, FalseClass], default: false
 property :chef_user, String, default: 'workflow'
-property :chef_user_pem, String, required: true
-property :builder_pem, String, required: true
+property :chef_user_pem, String, required: true, sensitive: true
+property :builder_pem, String, required: true, sensitive: true
 property :chef_fqdn, String, default: URI.parse(Chef::Config['chef_server_url']).host
 property :automate_fqdn, String, required: true
 property :supermarket_fqdn, String
 property :job_dispatch_version, String, default: 'v2'
 property :automate_user, String, default: 'admin'
-property :automate_password, String
+property :automate_password, String, sensitive: true
 property :automate_enterprise, String, default: 'chef'
 property :chef_config_path, String, default: '/etc/chef/client.rb'
 property :platform, String

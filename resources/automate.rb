@@ -28,9 +28,9 @@ property :accept_license, [TrueClass, FalseClass], default: false
 property :enterprise, [String, Array], default: 'chef'
 property :license, String
 property :chef_user, String, default: 'workflow'
-property :chef_user_pem, String, required: true
-property :validation_pem, String, required: true
-property :builder_pem, String, required: true
+property :chef_user_pem, String, required: true, sensitive: true
+property :validation_pem, String, required: true, sensitive: true
+property :builder_pem, String, required: true, sensitive: true
 property :platform, String
 property :platform_version, String
 

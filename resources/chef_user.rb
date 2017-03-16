@@ -24,7 +24,7 @@ property :username, String, name_property: true
 property :first_name, String, required: true
 property :last_name, String, required: true
 property :email, String, required: true
-property :password, String
+property :password, String, sensitive: true
 property :key_path, String
 property :serveradmin, [TrueClass, FalseClass], default: false
 
