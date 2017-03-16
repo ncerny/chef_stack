@@ -31,7 +31,7 @@ property :log_level, Symbol, default: :auto
 property :config, String
 property :run_list, Array
 property :environment, String
-property :validation_pem, String
+property :validation_pem, String, sensitive: true
 property :validation_client_name, String
 property :tags, [String, Array], default: ''
 property :interval, Integer, default: 1800
