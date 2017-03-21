@@ -51,14 +51,23 @@ action :create do
   # Hardcode v1 runner search to automate-build-node
   new_resource.config << "\ndelivery['default_search'] = 'tags:delivery-build-node'"
 
-  chef_ingredient 'automate' do
+  hab_install 'hab' do
     action :upgrade
-    channel new_resource.channel
-    version new_resource.version
-    config new_resource.config
-    accept_license new_resource.accept_license
-    platform new_resource.platform if new_resource.platform
-    platform_version new_resource.platform_version if new_resource.platform_version
+  end
+
+  service 'automate' do
+    action :nothing
+  end
+
+  execute 'postinst' do
+    command "hab pkg exec frog-hornets-nest/automate postinst"
+    action :nothing
+    notifies :restart, 'service[automate]'
+  end
+
+  hab_package "frog-hornets-nest/automate" do
+    action :upgrade
+    notifies :run, 'execute[postinst]'
   end
 
   directory '/etc/delivery'
