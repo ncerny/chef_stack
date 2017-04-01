@@ -28,6 +28,8 @@ property :accept_license, [TrueClass, FalseClass], default: false
 property :addons, Hash
 property :data_collector_token, String, default: '93a49a4f2482c64126f7b6015e6b0f30284287ee4054ff8807fb63d9cbd1c506'
 property :data_collector_url, String
+property :platform, String
+property :platform_version, String
 
 load_current_value do
   # node.run_state['chef-users'] ||= Mixlib::ShellOut.new('chef-server-ctl user-list').run_command.stdout
@@ -45,6 +47,8 @@ action :create do
     version new_resource.version
     config new_resource.config
     accept_license new_resource.accept_license
+    platform new_resource.platform if new_resource.platform
+    platform_version new_resource.platform_version if new_resource.platform_version
   end
 
   ingredient_config 'chef-server' do
@@ -58,58 +62,12 @@ action :create do
       version options['version'] || :latest
       config options['config'] || ''
       accept_license new_resource.accept_license
+      platform new_resource.platform if new_resource.platform
+      platform_version new_resource.platform_version if new_resource.platform_version
     end
 
     ingredient_config addon do
       notifies :reconfigure, "chef_ingredient[#{addon}]", :immediately
     end
   end
-end
-
-action :gather_secrets do
-  ruby_block 'gather chef-server secrets' do
-    block do
-      chefserver = {}
-      files = Dir.glob('/etc/opscode*/*.{rb,pem,pub,json}')
-      files.each do |file|
-        chefserver[file] = IO.read(file)
-      end
-      write_vault('chefserver' => chefserver)
-    end
-    action :run
-  end
-
-  ruby_block 'gather automate secrets' do
-    block do
-      supermarket_ocid = JSON.parse(::File.read('/etc/opscode/oc-id-applications/supermarket.json'))
-      automate = {
-        'validator_pem' => ::File.read('/etc/opscode/infrastructure-validation.pem'),
-        'user_pem' => ::File.read('/etc/opscode/users/workflow.pem'),
-        'builder_pem' => ::File.read('/etc/opscode/users/builder.pem'),
-        #  'builder_pub' => "ssh-rsa #{[builder_key.to_blob].pack('m0')}",
-        'supermarket_oauth2_app_id' => supermarket_ocid['uid'],
-        'supermarket_oauth2_secret' => supermarket_ocid['secret'],
-        'supermarket_fqdn' => URI(supermarket_ocid['redirect_uri']).host
-      }
-      write_vault('automate' => automate)
-    end
-    action :run
-  end
-end
-
-# rubocop:disable Metrics/AbcSize
-# rubocop:disable Metrics/MethodLength
-def write_vault(data)
-  item = read_vault || ChefVault::Item.new(
-    'chef',
-    node.chef_environment,
-    node_name: 'workflow',
-    client_key_path: '/etc/opscode/users/workflow.pem'
-  )
-  item.raw_data ||= { 'id' => node.chef_environment }
-  item.raw_data.merge!(data)
-  item.search("chef_environment:#{node.chef_environment} AND recipe:chef")
-  item.clients("chef_environment:#{node.chef_environment} AND recipe:chef")
-  item.admins('workflow')
-  item.save
 end

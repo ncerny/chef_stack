@@ -1,4 +1,4 @@
-#
+
 # Cookbook Name:: chef_stack
 # Resource:: backend
 #
@@ -28,6 +28,8 @@ property :accept_license, [TrueClass, FalseClass], default: false
 property :bootstrap_node, String, required: true
 property :publish_address, String, default: node['ipaddress']
 property :chef_backend_secrets, String
+property :platform, String
+property :platform_version, String
 
 load_current_value do
   # node.run_state['chef-users'] ||= Mixlib::ShellOut.new('chef-server-ctl user-list').run_command.stdout
@@ -44,10 +46,22 @@ action :create do
     version new_resource.version
     config new_resource.config # TODO: Figure out why this isn't working in chef-ingredient
     accept_license new_resource.accept_license
+    platform new_resource.platform if new_resource.platform
+    platform_version new_resource.platform_version if new_resource.platform_version
   end
 
   file '/etc/chef-backend/chef-backend.rb' do
     content new_resource.config
+  end
+
+  if new_resource.property_is_set?(:chef_backend_secrets)
+    chef_file '/etc/chef-backend/chef-backend-secrets.json' do
+      source new_resource.chef_backend_secrets
+      user 'root'
+      group 'root'
+      mode '0600'
+      not_if { node['fqdn'].eql?(new_resource.bootstrap_node) }
+    end
   end
 
   execute 'chef-backend-ctl create-cluster --accept-license --yes' do
@@ -55,15 +69,8 @@ action :create do
     not_if 'chef-backend-ctl cluster-status'
   end
 
-  chef_file '/etc/chef-backend/chef-backend-secrets.json' do
-    source new_resource.chef_backend_secrets
-    user 'root'
-    group 'root'
-    mode '0600'
-    not_if { node['fqdn'].eql?(new_resource.bootstrap_node) }
-  end
-
   execute "chef-backend-ctl join-cluster #{new_resource.bootstrap_node} --accept-license --yes" do
     not_if { node['fqdn'].eql?(new_resource.bootstrap_node) }
+    not_if 'chef-backend-ctl cluster-status'
   end
 end

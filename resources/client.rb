@@ -38,6 +38,8 @@ property :interval, Integer, default: 1800
 property :splay, Integer, default: 1800
 property :data_collector_token, String, default: '93a49a4f2482c64126f7b6015e6b0f30284287ee4054ff8807fb63d9cbd1c506'
 property :data_collector_url, String
+property :platform, String
+property :platform_version, String
 
 load_current_value do
   version Chef::VERSION
@@ -60,12 +62,16 @@ action :install do
     action :upgrade
     version new_resource.version
     not_if { new_resource.chefdk }
+    platform new_resource.platform if new_resource.platform
+    platform_version new_resource.platform_version if new_resource.platform_version
   end
 
   chef_ingredient 'chefdk' do
     action :upgrade
     version new_resource.version
     only_if { new_resource.chefdk }
+    platform new_resource.platform if new_resource.platform
+    platform_version new_resource.platform_version if new_resource.platform_version
   end
 
   directory ::File.join(prefix, 'config.d') do
@@ -76,7 +82,7 @@ action :install do
   template 'client.rb' do
     source 'client.rb.erb'
     path ::File.join(prefix, 'client.rb')
-    cookbook 'chef'
+    cookbook 'chef_stack'
     mode '0640'
     variables node_name: new_resource.node_name,
               chef_server_url: new_resource.chef_server_url,
