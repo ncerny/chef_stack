@@ -15,7 +15,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# rubocop:disable LineLength
 
 insecure_key = <<-EOS
 -----BEGIN RSA PRIVATE KEY-----
@@ -52,6 +51,7 @@ require 'spec_helper'
 describe 'chef_test::automate' do
   cached(:centos_7_2) do
     stub_command('delivery-ctl list-enterprises --ssh-pub-key-file=/etc/delivery/builder_key.pub | grep -w test').and_return(false)
+    stub_command('delivery-ctl status').and_return(false)
     ChefSpec::ServerRunner.new(
       step_into: 'chef_automate',
       platform: 'centos',
@@ -85,7 +85,7 @@ describe 'chef_test::automate' do
       [
         '/var/opt/delivery/license',
         '/etc/delivery',
-        '/etc/chef'
+        '/etc/chef',
       ].each do |dir|
         expect(centos_7_2).to create_directory(dir)
       end
@@ -96,7 +96,7 @@ describe 'chef_test::automate' do
         '/var/opt/delivery/license/delivery.license' => 'license',
         '/etc/delivery/chef_user.pem' => insecure_key,
         '/etc/chef/validation.pem' => insecure_key,
-        '/etc/delivery/builder_key' => insecure_key
+        '/etc/delivery/builder_key' => insecure_key,
       }.each do |file, src|
         expect(centos_7_2).to create_chef_file(file)
           .with(
