@@ -31,7 +31,7 @@ property :log_level, Symbol, default: :auto
 property :config, String
 property :run_list, Array
 property :environment, String
-property :validation_pem, String
+property :validation_pem, String, sensitive: true
 property :validation_client_name, String
 property :tags, [String, Array], default: ''
 property :interval, Integer, default: 1800
@@ -111,7 +111,7 @@ action :install do
   end
 
   chef_file ::File.join(prefix, 'validation.pem') do
-    source new_resource.validation_pem
+    source new_resource.validation_pem || 'string_to_prevent_error'
     user 'root'
     group 'root'
     mode '0600'

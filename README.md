@@ -31,7 +31,7 @@ Installs Chef Automate.
 | Name  | Type | Default Value  |  Description  |
 |---|---|---|---|
 | enterprise  | [String,  Array]  | chef | The Enterprise to create in Automate|
-| license  | String  | N/A  | Your license file |  we recommend using the chef_file resource |
+| license  | String  | N/A  | Your license file (we recommend using the chef_file resource) |
 | chef_user  | String  | workflow  | The user you will connect to the Chef server as  |
 | chef_user_pem  | String  |  N/A | The private key of the above Chef user   |
 | validation_pem  | String  |  N/A | The validator key of the Chef org we're connecting to   |
@@ -45,7 +45,7 @@ Installs Chef Automate.
 |---|---|---|---|
 | bootstrap_node  | String  | N/A | The node we'll bootstrap secrets with. |
 | publish_address  | String  | node['ipaddress']  | The address you want Chef-Backend to listen on. |
-| chef_backend_secrets  | String  | nil  | A location where your secrets are |  we recommend using the chef_file resource. |
+| chef_backend_secrets  | String  | nil  | A location where your secrets are (we recommend using the chef_file resource.) |
 
 ### chef_org
 
@@ -68,10 +68,10 @@ Installs Chef Automate.
 | username  | String  | N/A | The username of the user. |
 | first_name  | String  | N/A  | The first name of the user. |
 | last_name  | Array  | N/A  | The last name of the user. |
-| email  | Array  | []  | N/A  | The users e-mail. |
-| password  | Array  | [] | The users password. |
+| email  | String  | N/A | The users e-mail. |
+| password  | String  | N/A | The users password. |
 | key_path  | String  | N/A | Where to store the users private key that is created with the user. |
-| serveradmin  | [TrueClass,  FalseClass]  | F | Is the user a serveradmin? |
+| serveradmin  | [TrueClass,  FalseClass]  | false | Is the user a serveradmin? |
 
 ### chef_client
 | Name  | Type | Default Value  | Description  |

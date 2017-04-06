@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: chef_stack
-# Resource:: chef_user
+# Resource:: chef_server_user
 #
 # Copyright 2016 Chef Software Inc
 #
@@ -17,14 +17,14 @@
 # limitations under the License.
 # rubocop:disable LineLength
 
-resource_name 'chef_user'
+resource_name 'chef_server_user'
 default_action :create
 
 property :username, String, name_property: true
 property :first_name, String, required: true
 property :last_name, String, required: true
 property :email, String, required: true
-property :password, String
+property :password, String, sensitive: true
 property :key_path, String
 property :serveradmin, [TrueClass, FalseClass], default: false
 
