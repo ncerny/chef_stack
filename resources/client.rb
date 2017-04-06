@@ -111,7 +111,7 @@ action :install do
   end
 
   chef_file ::File.join(prefix, 'validation.pem') do
-    source new_resource.validation_pem
+    source new_resource.validation_pem || 'string_to_prevent_error'
     user 'root'
     group 'root'
     mode '0600'
