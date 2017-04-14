@@ -42,7 +42,7 @@ action :create do
       group new_resource.group
       mode new_resource.mode
     end
-  elsif new_resource.source =~ %r{[a-zA-Z]*://.*}
+  elsif new_resource.source =~ %r{^[a-zA-Z]*://.*}
     remote_file new_resource.filename do
       source new_resource.source
       user new_resource.user
