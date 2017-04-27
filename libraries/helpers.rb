@@ -30,7 +30,7 @@ def ensurekv(original_config, hash)
       str = "'#{v}'"
     end
     if config =~ /^ *#{v}.*$/
-      config.sub(/^ *#{v}.*$/, "#{k} #{str}")
+      config.sub!(/^ *#{v}.*$/, "#{k} #{str}")
     else
       config << "\n#{k} #{str}"
     end
