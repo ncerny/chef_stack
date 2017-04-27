@@ -50,7 +50,7 @@ action :create do
     action :upgrade
     channel new_resource.channel
     version new_resource.version
-    config ensure_kv(new_resource.config, required_config)
+    config ensurekv(new_resource.config, required_config)
     accept_license new_resource.accept_license
     platform new_resource.platform if new_resource.platform
     platform_version new_resource.platform_version if new_resource.platform_version
