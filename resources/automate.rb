@@ -41,7 +41,7 @@ end
 
 action :create do
   required_config = <<-EOF
-    delivery['chef_username'] = #{new_resource.chef_user}
+    delivery['chef_username'] = '#{new_resource.chef_user}'
     delivery['chef_private_key'] = '/etc/delivery/#{new_resource.chef_user}.pem'
     delivery['default_search'] = 'tags:delivery-build-node'
   EOF

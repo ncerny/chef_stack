@@ -7,6 +7,6 @@ long_description 'Resource Cookbook for Managing Chef Software Inc Product Suite
 issues_url 'https://github.com/ncerny/chef_stack/issues' if respond_to?(:issues_url)
 source_url 'https://github.com/ncerny/chef_stack' if respond_to?(:source_url)
 
-version '0.8.5'
+version '0.8.6'
 
 depends 'chef-ingredient'
