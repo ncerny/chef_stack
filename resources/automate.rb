@@ -40,17 +40,17 @@ load_current_value do
 end
 
 action :create do
-  required_config = {
-    :"delivery['chef_username']" => new_resource.chef_user,
-    :"delivery['chef_private_key']" => "/etc/delivery/#{new_resource.chef_user}.pem",
-    :"delivery['default_search']" => 'tags:delivery-build-node',
-  }
+  required_config = <<-EOF
+    delivery['chef_username'] = #{new_resource.chef_user}
+    delivery['chef_private_key'] = '/etc/delivery/#{new_resource.chef_user}.pem'
+    delivery['default_search'] = 'tags:delivery-build-node'
+  EOF
 
   chef_ingredient 'automate' do
     action :upgrade
     channel new_resource.channel
     version new_resource.version
-    config ensurekv(new_resource.config, required_config)
+    config new_resource.config.dup.concat(required_config)
     accept_license new_resource.accept_license
     platform new_resource.platform if new_resource.platform
     platform_version new_resource.platform_version if new_resource.platform_version
