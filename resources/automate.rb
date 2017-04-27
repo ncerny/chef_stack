@@ -40,21 +40,17 @@ load_current_value do
 end
 
 action :create do
-  # https://github.com/chef/delivery/issues/469
-  new_resource.config << "\ndelivery['chef_server_proxy'] = false" unless new_resource.config.include?('chef_server_proxy')
-
-  # Always make sure user and key provided to resource is at the bottom of the config, overriding duplicates.
-  new_resource.config << "\ndelivery['chef_username'] = '#{new_resource.chef_user}'"
-  new_resource.config << "\ndelivery['chef_private_key'] = '/etc/delivery/#{new_resource.chef_user}.pem'"
-
-  # Hardcode v1 runner search to automate-build-node
-  new_resource.config << "\ndelivery['default_search'] = 'tags:delivery-build-node'"
+  required_config = {
+    :"delivery['chef_username']" => new_resource.chef_user,
+    :"delivery['chef_private_key']" => "/etc/delivery/#{new_resource.chef_user}.pem",
+    :"delivery['default_search']" => 'tags:delivery-build-node',
+  }
 
   chef_ingredient 'automate' do
     action :upgrade
     channel new_resource.channel
     version new_resource.version
-    config new_resource.config
+    config ensure_kv(new_resource.config, required_config)
     accept_license new_resource.accept_license
     platform new_resource.platform if new_resource.platform
     platform_version new_resource.platform_version if new_resource.platform_version
