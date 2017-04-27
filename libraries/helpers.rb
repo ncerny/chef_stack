@@ -20,7 +20,8 @@ def prefix
   (platform_family?('windows') ? 'C:/Chef/' : '/etc/chef/')
 end
 
-def ensurekv(config, hash)
+def ensurekv(original_config, hash)
+  config = original_config.dup
   hash.each do |k, v|
     if v.is_a?(Symbol)
       v = v.to_s
