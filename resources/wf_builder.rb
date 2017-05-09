@@ -74,10 +74,11 @@ action :create do
 
   ::Dir.glob('/etc/chef/trusted_certs/*.crt').each do |crt|
     c = ::File.read(crt)
-    file '/opt/chefdk/embedded/ssl/certs/cacert.pem' do
-      content  cacert_pem << "\n" << c
-      not_if { cacert_pem.include?(c) }
-    end
+    cacert_pem << "\n" << c unless cacert_pem.include?(c)
+  end
+
+  file '/opt/chefdk/embedded/ssl/certs/cacert.pem' do
+    content cacert_pem
   end
 
   ohai 'reload_passwd' do
