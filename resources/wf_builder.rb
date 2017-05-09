@@ -67,7 +67,7 @@ action :create do
       command "knife ssl fetch -s https://#{server} -c #{Chef::Config['config_file']}"
       not_if "knife ssl check -s https://#{server} -c #{Chef::Config['config_file']}"
       ignore_failure true
-    end
+    end unless server.nil? || server.empty?
   end
 
   execute 'cat /etc/chef/trusted_certs/*.crt >> /opt/chefdk/embedded/ssl/certs/cacert.pem'
