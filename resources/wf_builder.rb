@@ -72,9 +72,13 @@ action :create do
 
   cacert_pem = ::File.read('/opt/chefdk/embedded/ssl/certs/cacert.pem')
 
-  ::Dir.glob('/etc/chef/trusted_certs/*.crt').each do |crt|
-    c = ::File.read(crt)
-    cacert_pem << "\n" << c unless cacert_pem.include?(c)
+  ruby_block 'configure SSL certificates' do
+    block do
+      ::Dir.glob('/etc/chef/trusted_certs/*.crt').each do |crt|
+        c = ::File.read(crt)
+        cacert_pem << "\n" << c unless cacert_pem.include?(c)
+      end
+    end
   end
 
   file '/opt/chefdk/embedded/ssl/certs/cacert.pem' do
