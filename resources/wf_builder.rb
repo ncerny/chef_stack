@@ -70,7 +70,7 @@ action :create do
     end unless server.nil? || server.empty?
   end
 
-  cacert_pem = ::File.read('/opt/chefdk/embedded/ssl/certs/cacert.pem')
+  cacert_pem = ::File.read(Dir['/opt/chef*/embedded/ssl/certs/cacert.pem'].first)
 
   ruby_block 'configure SSL certificates' do
     block do
