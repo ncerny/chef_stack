@@ -3,6 +3,8 @@ The resources have been merged into [chef-ingredient](https://github.com/chef-co
 
 chef_stack will continue to be used as a testing ground to test potentially breaking changes.
 
+The last stable version was 0.9.0.  Anything after this version, will likely break your infrastructure.
+
 # chef_stack
 
 Chef stack is a library cookbook that provides custom resources to build and manage your Chef infrastructure.
