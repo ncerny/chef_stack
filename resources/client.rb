@@ -57,6 +57,8 @@ load_current_value do
 end
 
 action :install do
+  deprecation_notice
+  
   chef_ingredient 'chef' do
     action :upgrade
     version new_resource.version

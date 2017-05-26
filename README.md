@@ -1,3 +1,8 @@
+### chef_stack has been deprecated.
+The resources have been merged into [chef-ingredient](https://github.com/chef-cookbooks/chef-ingredient). Please update your cookbooks to use chef-ingredient.
+
+chef_stack will continue to be used as a testing ground to test potentially breaking changes.
+
 # chef_stack
 
 Chef stack is a library cookbook that provides custom resources to build and manage your Chef infrastructure.

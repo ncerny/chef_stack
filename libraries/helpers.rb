@@ -37,3 +37,12 @@ def ensurekv(original_config, hash)
   end
   config
 end
+
+def deprecation_notice
+  message = 'Chef Stack is deprecated.  The resources have been merged into chef-ingredient.  Please update your cookbooks to use chef-ingredient.'
+  log 'Deprecation' do
+    level :warn
+    message message
+  end
+  Chef.deprecated(:internal_api, message)
+end

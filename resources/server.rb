@@ -36,6 +36,8 @@ load_current_value do
 end
 
 action :create do
+  deprecation_notice
+  
   if new_resource.data_collector_url
     new_resource.config << "\ndata_collector['root_url'] = '#{new_resource.data_collector_url}'"
     new_resource.config << "\ndata_collector['token'] = '#{new_resource.data_collector_token}'"

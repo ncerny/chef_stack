@@ -37,6 +37,8 @@ load_current_value do
 end
 
 action :create do
+  deprecation_notice
+  
   chef_ingredient 'supermarket' do
     action :upgrade
     channel new_resource.channel
