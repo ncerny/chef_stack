@@ -38,6 +38,8 @@ load_current_value do
 end
 
 action :create do
+  deprecation_notice
+  
   raise 'Must accept the Chef License agreement before continuing.' unless new_resource.accept_license
 
   new_resource.config = ensurekv(new_resource.config, publish_address: new_resource.publish_address)

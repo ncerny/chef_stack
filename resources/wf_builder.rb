@@ -44,6 +44,8 @@ load_current_value do
 end
 
 action :create do
+  deprecation_notice
+  
   chef_ingredient 'chefdk' do
     action :upgrade
     channel new_resource.channel

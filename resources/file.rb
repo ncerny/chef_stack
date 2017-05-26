@@ -31,6 +31,8 @@ load_current_value do
 end
 
 action :create do
+  deprecation_notice
+  
   new_resource.source = (property_is_set?(:source) ? new_resource.source : "cookbook_file://#{new_resource.filename}")
   if new_resource.source.start_with?('cookbook_file://')
     src = new_resource.source.split('://')[1].split('::')
