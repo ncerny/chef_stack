@@ -37,7 +37,7 @@ end
 
 action :create do
   if new_resource.data_collector_url
-    data_collector_config = <<-EOF
+    data_collector_config = <<~EOF
       data_collector['root_url'] = '#{new_resource.data_collector_url}'
       data_collector['token'] = '#{new_resource.data_collector_token}'
     EOF
