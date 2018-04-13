@@ -19,7 +19,7 @@
 resource_name 'chef_server'
 default_action :create
 
-property :name, String, name_property: true
+property :fqdn, String, name_property: true
 property :channel, Symbol, default: :stable
 property :version, [String, Symbol], default: :latest
 property :config, String, required: true
@@ -37,14 +37,16 @@ end
 
 action :create do
   if new_resource.data_collector_url
-    new_resource.config << "\ndata_collector['root_url'] = '#{new_resource.data_collector_url}'"
-    new_resource.config << "\ndata_collector['token'] = '#{new_resource.data_collector_token}'"
+    data_collector_config = <<-EOF
+      data_collector['root_url'] = '#{new_resource.data_collector_url}'
+      data_collector['token'] = '#{new_resource.data_collector_token}'
+    EOF
   end
   chef_ingredient 'chef-server' do
     action :upgrade
     channel new_resource.channel
     version new_resource.version
-    config new_resource.config
+    config ensurekv(new_resource.config.dup.concat(data_collector_config), api_fqdn: new_resource.fqdn)
     accept_license new_resource.accept_license
     platform new_resource.platform if new_resource.platform
     platform_version new_resource.platform_version if new_resource.platform_version
